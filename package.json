@@ -19,12 +19,15 @@
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.0",
     "knex": "^2.4.1",
-    "pm2": "^5.2.2",
+    "pm2": "^4.5.6",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
     "tedious": "^15.1.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": "16.15.1"
   }
 }
