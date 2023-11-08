@@ -66,11 +66,13 @@ class NotesController{
     async index(request, response) {        
         const user_id = request.user.id;
 
-        
+        console.log('user: ', user_id)
         
         const tasks = await knex("tasks")
             .where({user_id})
             .orderBy("priority", "desc")
+
+        console.log('tasks: ', tasks)
 
         return response.status(201).json(tasks)
     }
