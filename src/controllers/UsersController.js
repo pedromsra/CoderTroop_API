@@ -10,20 +10,20 @@ class UsersController {
         
         const {name, email, password} = request.body;
 
+        console.log(name, email, password)
         const checkUserExist = await knex("users").where({email}).first();
-        console.log('2')
         if(checkUserExist){
             throw new AppError("Email já cadastrado");
         }
 
         const hashedPassword = await hash(password, 8);
 
-        await knex("users").insert({
+        const user_id = await knex("users").insert({
             name,
             email,
             password: hashedPassword
         })
-        console.log('3')
+        console.log('user_id: ', user_id)
 
         response.json({name, email, password})
     }
