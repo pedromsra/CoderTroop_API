@@ -1,6 +1,6 @@
 const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
-console.log(process.env.NODE_ENV)
+
 class NotesController{
 
     async create (request, response) {
@@ -29,9 +29,6 @@ class NotesController{
         const { task, priority, done } = request.body;
 
         const {id} = request.params;
-
-        console.log(task, priority, done)
-        console.log(priority !== 0)
 
         if (!task) {
             throw new AppError("A tarefa deve ter algum conteúdo");
@@ -68,14 +65,11 @@ class NotesController{
 
     async index(request, response) {        
         const user_id = request.user.id;
-
-        console.log('user: ', user_id)
         
         const tasks = await knex("tasks")
             .where({user_id})
             .orderBy("priority", "desc")
 
-        console.log('tasks: ', tasks)
 
         return response.status(201).json(tasks)
     }

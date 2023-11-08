@@ -6,11 +6,9 @@ const knex = require("../database/knex"); //para se conectar com as insformaçõ
 
 class UsersController {
     async create(request, response) {
-        console.log('1')
         
         const {name, email, password} = request.body;
 
-        console.log(name, email, password)
         const checkUserExist = await knex("users").where({email}).first();
         if(checkUserExist){
             throw new AppError("Email já cadastrado");
@@ -23,7 +21,6 @@ class UsersController {
             email,
             password: hashedPassword
         })
-        console.log('user_id: ', user_id)
 
         response.json({name, email, password})
     }
