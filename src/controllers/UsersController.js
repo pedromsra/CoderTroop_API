@@ -26,6 +26,8 @@ class UsersController {
             })
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
         return response.json({name, email, password})
@@ -37,7 +39,15 @@ class UsersController {
         const user_id = request.user.id
 
         //checar se o novo email já existe em algum outro usuário
-        const user = await knex('users').where({id: user_id}).first() //só retorna 1
+        let user
+
+        try {
+            user = await knex('users').where({id: user_id}).first()
+        } catch (e) {
+            throw new AppError(e)
+        } finally {
+            knex.destroy()
+        }
 
         if (!user) {
             throw new AppError("Usuário não encontrado")
@@ -80,6 +90,8 @@ class UsersController {
             })
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
 
@@ -93,6 +105,8 @@ class UsersController {
             await knex("users").where({id}).delete()
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
         return response.status(201).json();

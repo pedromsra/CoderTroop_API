@@ -24,6 +24,8 @@ class NotesController{
             });
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
         return response.status(201).json();
@@ -58,6 +60,8 @@ class NotesController{
             });
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
         
         return response.status(201).json();
@@ -70,6 +74,8 @@ class NotesController{
             await knex("tasks").where({id}).delete();
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
         return response.status(201).json()
@@ -86,6 +92,8 @@ class NotesController{
                 .orderBy("priority", "desc")
         } catch (e) {
             throw new AppError(e)
+        } finally {
+            knex.destroy()
         }
 
 
