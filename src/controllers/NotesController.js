@@ -16,13 +16,17 @@ class NotesController{
 
         const user_id = request.user.id;
 
-        await knex("tasks").insert({
-            task,
-            priority,
-            user_id
-        });
+        try{
+            await knex("tasks").insert({
+                task,
+                priority,
+                user_id
+            });
+        } catch (e) {
+            throw new AppError(e)
+        }
 
-        return response.json();
+        return response.status(201).json();
     }
     
     async update (request, response) {
@@ -44,21 +48,29 @@ class NotesController{
         } else if (done === false || done === 0) {
             process.env.NODE_ENV ? doneUpdate = false : doneUpdate = 0
         }
-        
-        await knex("tasks").where({id: id}).update({
-            task,
-            priority,
-            done: doneUpdate,
-            updated_at: new Date().toISOString().replace('Z','').replace('T', ' ')
-        });
+
+        try{
+            await knex("tasks").where({id: id}).update({
+                task,
+                priority,
+                done: doneUpdate,
+                updated_at: new Date().toISOString().replace('Z','').replace('T', ' ')
+            });
+        } catch (e) {
+            throw new AppError(e)
+        }
         
         return response.status(201).json();
     }
 
     async delete(request, response) {
         const {id} = request.params;
-        
-        await knex("tasks").where({id}).delete();
+
+        try{
+            await knex("tasks").where({id}).delete();
+        } catch (e) {
+            throw new AppError(e)
+        }
 
         return response.status(201).json()
     }
@@ -66,9 +78,15 @@ class NotesController{
     async index(request, response) {        
         const user_id = request.user.id;
         
-        const tasks = await knex("tasks")
-            .where({user_id})
-            .orderBy("priority", "desc")
+        let  tasks
+
+        try{
+            tasks = await knex("tasks")
+                .where({user_id})
+                .orderBy("priority", "desc")
+        } catch (e) {
+            throw new AppError(e)
+        }
 
 
         return response.status(201).json(tasks)

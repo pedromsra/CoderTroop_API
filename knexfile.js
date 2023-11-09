@@ -25,6 +25,7 @@ module.exports = {
       database:"lwrheget",
       ssl: {rejectUnauthorized: false},
     },
+    pool: {min: 1, max: 5},
     migrations: {
       directory: path.resolve(__dirname, "src", "database", "knex", "migrations")
     },

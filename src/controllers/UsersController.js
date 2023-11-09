@@ -16,13 +16,19 @@ class UsersController {
 
         const hashedPassword = await hash(password, 8);
 
-        const user_id = await knex("users").insert({
-            name,
-            email,
-            password: hashedPassword
-        })
+        let user_id
 
-        response.json({name, email, password})
+        try{
+            user_id = await knex("users").insert({
+                name,
+                email,
+                password: hashedPassword
+            })
+        } catch (e) {
+            throw new AppError(e)
+        }
+
+        return response.json({name, email, password})
     }
 
     async update(request, response) {
@@ -63,27 +69,33 @@ class UsersController {
             user.password = await hash(password, 8)
         }
 
-        await knex("users")
-        .where({id: user_id})
-        .update({
-            name: user.name,
-            email: user.email,
-            password: user.password,
-            updated_at: new Date().toISOString().replace('Z','').replace('T', ' ')
-        })
+        try{
+            await knex("users")
+            .where({id: user_id})
+            .update({
+                name: user.name,
+                email: user.email,
+                password: user.password,
+                updated_at: new Date().toISOString().replace('Z','').replace('T', ' ')
+            })
+        } catch (e) {
+            throw new AppError(e)
+        }
 
-        response.json({user})
-        //falta configurar o insomina
+
+        return response.status(201).json()
     }
 
     async delete(request, response) {
         const user_id = request.user.id
 
-        await knex("users").where({id}).delete()
+        try{
+            await knex("users").where({id}).delete()
+        } catch (e) {
+            throw new AppError(e)
+        }
 
-        response.json();
-
-        //falta configurar o insomina
+        return response.status(201).json();
     }
 }
 
