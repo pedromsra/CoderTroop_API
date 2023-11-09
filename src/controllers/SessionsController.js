@@ -6,17 +6,24 @@ const { sign } = require("jsonwebtoken")
 
 class SessionsController {
     async create(request, response) {
-        const {email, password} = request.body;
 
-        
-        const user = await knex("users").where({email}).first()
+        const { email, password } = request.body;
 
-        if(!user){
+        let user
+
+        try {
+            user = await knex("users").where({ email }).first()
+        } catch (e) {
+            throw new AppError(e)
+        }
+
+
+        if (!user) {
             throw new AppError("Email e/ou senha incorreta", 401)
         }
 
         const passwordMatched = await compare(password, user.password);
-        if(!passwordMatched){
+        if (!passwordMatched) {
             throw new AppError("Email e/ou senha incorreta", 401)
         }
 
@@ -26,8 +33,8 @@ class SessionsController {
             subject: String(user.id),
             expiresIn
         })
-        
-        return response.json({user, token})
+
+        return response.json({ user, token })
     }
 }
 

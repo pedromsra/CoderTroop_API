@@ -1,11 +1,11 @@
 const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 
-class NotesController{
+class NotesController {
 
-    async create (request, response) {
+    async create(request, response) {
         const { task, priority } = request.body;
-        
+
         if (!task) {
             throw new AppError("A tarefa deve ter algum conteúdo");
         }
@@ -16,7 +16,7 @@ class NotesController{
 
         const user_id = request.user.id;
 
-        try{
+        try {
             await knex("tasks").insert({
                 task,
                 priority,
@@ -24,26 +24,24 @@ class NotesController{
             });
         } catch (e) {
             throw new AppError(e)
-        } finally {
-            knex.destroy()
         }
 
         return response.status(201).json();
     }
-    
-    async update (request, response) {
+
+    async update(request, response) {
         const { task, priority, done } = request.body;
 
-        const {id} = request.params;
+        const { id } = request.params;
 
         if (!task) {
             throw new AppError("A tarefa deve ter algum conteúdo");
         }
-        
+
         if (!priority && priority !== 0) {
             throw new AppError("A tarefa deve ter alguma prioridade");
         }
-        
+
         let doneUpdate
         if (done === true || done === 1) {
             process.env.NODE_ENV ? doneUpdate = true : doneUpdate = 1
@@ -51,49 +49,45 @@ class NotesController{
             process.env.NODE_ENV ? doneUpdate = false : doneUpdate = 0
         }
 
-        try{
-            await knex("tasks").where({id: id}).update({
+
+        try {
+            await knex("tasks").where({ id: id }).update({
                 task,
                 priority,
                 done: doneUpdate,
-                updated_at: new Date().toISOString().replace('Z','').replace('T', ' ')
-            });
+                updated_at: new Date().toISOString().replace('Z', '').replace('T', ' ')
+            })
         } catch (e) {
             throw new AppError(e)
-        } finally {
-            knex.destroy()
         }
-        
+
+
         return response.status(201).json();
     }
 
     async delete(request, response) {
-        const {id} = request.params;
+        const { id } = request.params;
 
-        try{
-            await knex("tasks").where({id}).delete();
+        try {
+            await knex("tasks").where({ id }).delete();
         } catch (e) {
             throw new AppError(e)
-        } finally {
-            knex.destroy()
         }
 
         return response.status(201).json()
     }
 
-    async index(request, response) {        
+    async index(request, response) {
         const user_id = request.user.id;
-        
-        let  tasks
 
-        try{
+        let tasks
+
+        try {
             tasks = await knex("tasks")
-                .where({user_id})
+                .where({ user_id })
                 .orderBy("priority", "desc")
         } catch (e) {
             throw new AppError(e)
-        } finally {
-            knex.destroy()
         }
 
 
