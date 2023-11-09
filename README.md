@@ -25,6 +25,7 @@
 
 #### Backend para aplicação WEB de Tarefas com priorização;
 
+- Sinta-se a vontade para usar a ![APIRest que está rodando online!!](https://codertroop-api.onrender.com)
 - Desenvolvida em NodeJS v16.15.1;
 - Banco de dados construido com o auxilio do Querry Builder Knex;
 - Rodando com SQLite3;
